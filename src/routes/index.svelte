@@ -188,6 +188,9 @@
         <button style="color: #00FFF0" on:click={() => fargeendring("#00FFF0")}
             >Turkis</button
         >
+        <button style="color: yellow" on:click={() => fargeendring("#yellow")}
+            >yellow</button
+        >
     </div>
     {#if dato_boolean}
         <div class="timebar">
