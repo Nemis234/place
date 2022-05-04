@@ -74,7 +74,7 @@
     function reset() {
         let array_reset = {};
         for (let i = 0; i < array.length; i++) {
-            let hi = { [i]: "#00FFF0" };
+            let hi = { [i]: "#ffffff" };
             Object.assign(array_reset, hi);
         }
 
@@ -89,12 +89,18 @@
     };
 
     let farge = "blue";
+    let c = ["#ddd"];
 
-    const fargeendring = (a) => {
+    const fargeendring = (a, i) => {
         farge = a;
+        for (let i = 0; i < 5; i++) {
+            c[i] = null;
+        }
+        c[i] = "#ddd";
     };
 
     const endre_farge = async (i) => {
+        console.log(dato_boolean);
         if (dato_boolean) {
             return;
         }
@@ -108,7 +114,7 @@
             timer();
         }, 1000);
         minutes = 0;
-        seconds = 30;
+        seconds = 10;
         /* await updateDoc(doc(db, "pixels", "timestamp"), {
             time: countDownDate,
         }); */
@@ -136,6 +142,7 @@
             localStorage.time != null
                 ? localStorage.time
                 : (countDownDate = new Date().getTime() - 1);
+        console.log(dato_boolean);
         if (countDownDate == null) {
             clearInterval(x);
             dato_boolean = false;
@@ -144,8 +151,9 @@
         var now = new Date().getTime();
 
         var distance = countDownDate - now;
+        console.log(distance);
         if (distance < 0) {
-            clearInterval(x);
+            console.log("hei");
             clearInterval(x);
             dato_boolean = false;
             return;
@@ -154,68 +162,100 @@
         /* minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); */
         seconds = Math.floor((distance % (1000 * 60)) / 1000);
     }
+    /* 
+    var y = window.matchMedia("(max-width: 700px)");
+    console.log(y); // Call listener function at run time
+    function myFunction() {
+        console.log(y);
+    }
+    y.addListener(myFunction); // Attach listener function on state changes */
 </script>
 
-<body>
-    <div style="position:relative;min-width:960px" />
+<svelte:head
+    ><meta
+        name="viewport"
+        content="width=device-width, initial-scale=0.86, maximum-scale=3.0,  minimum-scale=0.86"
+    /></svelte:head
+>
 
+<svelte:body />
+
+{#if !hei}
+    <p id="loading">Loading</p>
+{:else}
     <div class="hei">
-        {#if !hei}
-            <p id="loading">Loading</p>
-        {:else}
-            {#each print as item, i}
-                <div
-                    class="pixl"
-                    style="background-color: {item.color}; left:{item.x +
-                        1.5}rem; top: {item.y + 1.5}rem;"
-                    on:click={() => endre_farge(i)}
-                />
-            {/each}
-        {/if}
+        {#each print as item, i}
+            <div
+                class="pixl"
+                style="background-color: {item.color}; left:{item.x}rem; top: {item.y +
+                    4}rem;"
+                on:click={() => endre_farge(i)}
+            />
+        {/each}
     </div>
-
-    <div class="navbar">
-        <!-- <button on:click={addTodo}>Reset</button> -->
-        <button style="color: blue" on:click={() => fargeendring("blue")}
-            >Blå</button
-        >
-        <button style="color: red" on:click={() => fargeendring("red")}
-            >Rød</button
-        >
-        <button style="color: green" on:click={() => fargeendring("green")}
-            >Grønn</button
-        >
-        <button style="color: #00FFF0" on:click={() => fargeendring("#00FFF0")}
-            >Turkis</button
-        >
-        <button style="color: yellow" on:click={() => fargeendring("#yellow")}
-            >yellow</button
-        >
+{/if}
+{#if dato_boolean}
+    <div class="timebar">
+        <p>{minutes}m {seconds}s</p>
     </div>
-    {#if dato_boolean}
-        <div class="timebar">
-            <p>{minutes}m {seconds}s</p>
-        </div>
-    {/if}
-</body>
+{/if}
+<div class="navbar">
+    <!-- <button on:click={addTodo}>Reset</button> -->
+    <button
+        style="background-color: {c[0]}; color: blue;"
+        on:click={() => fargeendring("blue", 0)}>Blå</button
+    >
+    <button
+        style="background-color: {c[1]}; color: red"
+        on:click={() => fargeendring("red", 1)}>Rød</button
+    >
+    <button
+        style="background-color: {c[2]}; color: green"
+        on:click={() => fargeendring("green", 2)}>Grønn</button
+    >
+    <button
+        style="background-color: {c[3]}; color: #00FFF0"
+        on:click={() => fargeendring("#00FFF0", 3)}>Turkis</button
+    >
+    <button
+        style="background-color: {c[4]}; color: yellow"
+        on:click={() => fargeendring("yellow", 4)}>Gul</button
+    >
+</div>
 
+<!-- <div style="position:relative; width:2560px; height: 1280px; top: 100px;" /> -->
 <style>
+    :global(body) {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+    }
     #loading {
         position: absolute;
         top: 4rem;
     }
+    .hei {
+        position: relative;
+        top: 10px;
+        left: 10px;
+    }
     .pixl {
         width: 1rem;
         height: 1rem;
-        border-collapse: collapse;
-        border: 1px solid white;
+        margin: none;
+        border: 0.125rem solid #ffffff;
+        border-collapse: separate;
         background-color: none;
         position: absolute;
+        box-sizing: border-box;
+    }
+    .pixl:hover {
+        border: 1px solid black;
     }
     .timebar {
         overflow: hidden;
         position: fixed;
-        bottom: 0;
+        top: 0;
         width: 100%;
         height: 10rem;
         text-align: center;
@@ -234,11 +274,12 @@
     }
     .navbar {
         overflow: hidden;
+        white-space: nowrap;
         display: flex;
         justify-content: center;
         background-color: #333;
         position: fixed;
-        bottom: 0;
+        top: 0;
         left: 0;
         width: 100%;
         height: 4rem;
@@ -255,17 +296,8 @@
         text-decoration: none;
         font-size: 2rem;
     }
-
     .navbar button:hover {
         background: #ddd;
         color: black;
-    }
-    .navbar button:target {
-        background: #ddd;
-        color: black;
-    }
-    .hei {
-        display: block;
-        position: absolute;
     }
 </style>
