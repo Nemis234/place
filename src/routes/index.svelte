@@ -12,6 +12,7 @@
         arrayUnion,
         arrayRemove,
         writeBatch,
+        FieldValue,
     } from "firebase/firestore";
     /* import { browser } from "$app/env"; */
 
@@ -53,10 +54,6 @@
             array.push({ x: i, y: j, color: "" });
         }
     }
-
-    /* await updateDoc(doc(db, "pixels", "pixel"), {
-        regions: arrayUnion("greater_virginia"),
-    }); */
 
     let morn = [];
     let hei = false;
@@ -115,14 +112,10 @@
         }, 1000);
         minutes = 0;
         seconds = 10;
-        /* await updateDoc(doc(db, "pixels", "timestamp"), {
-            time: countDownDate,
-        }); */
         await updateDoc(doc(db, "pixels", "pixel"), {
             ["pixels." + i]: farge,
         });
     };
-
     var countDownDate =
         localStorage.time != ""
             ? localStorage.time
@@ -243,7 +236,6 @@
         width: 1rem;
         height: 1rem;
         margin: none;
-        border: 0.125rem solid #ffffff;
         border-collapse: separate;
         background-color: none;
         position: absolute;
