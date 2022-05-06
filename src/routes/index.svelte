@@ -201,7 +201,7 @@
     <p id="loading">Loading</p>
 {:else}
     <div class="hei">
-        <div class="scroller" />
+        <div class="scroller" style="transform:scale({el}) ;" />
         {#each print as item, i}
             <span
                 class="pixl"
