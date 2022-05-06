@@ -155,13 +155,6 @@
         /* minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); */
         seconds = Math.floor((distance % (1000 * 60)) / 1000);
     }
-    /* 
-    var y = window.matchMedia("(max-width: 700px)");
-    console.log(y); // Call listener function at run time
-    function myFunction() {
-        console.log(y);
-    }
-    y.addListener(myFunction); // Attach listener function on state changes */
 </script>
 
 <svelte:head
@@ -177,8 +170,9 @@
     <p id="loading">Loading</p>
 {:else}
     <div class="hei">
+        <div class="scroller" />
         {#each print as item, i}
-            <div
+            <span
                 class="pixl"
                 style="background-color: {item.color}; left:{item.x}rem; top: {item.y +
                     4}rem;"
@@ -216,7 +210,6 @@
     >
 </div>
 
-<!-- <div style="position:relative; width:2560px; height: 1280px; top: 100px;" /> -->
 <style>
     :global(body) {
         margin: 0;
@@ -227,10 +220,15 @@
         position: absolute;
         top: 4rem;
     }
+    .scroller {
+        height: 75rem;
+        width: 151rem;
+        position: absolute;
+    }
     .hei {
         position: relative;
-        top: 10px;
-        left: 10px;
+        top: 1rem;
+        left: 1rem;
     }
     .pixl {
         width: 1rem;
@@ -261,7 +259,7 @@
         display: block;
         border: none;
         text-align: center;
-        padding: 14px 16px;
+        padding: 0.875rem 1rem;
         text-decoration: none;
     }
     .navbar {
