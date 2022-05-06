@@ -170,19 +170,23 @@
             e.preventDefault();
         }
     };
-
+    let scrollerDisplay = true;
     const zoom = (zoom) => {
         if (zoom) {
             if (el < 1) {
                 el = 1;
+                scrollerDisplay = true;
             } else {
                 el = 4;
+                scrollerDisplay = false;
             }
         } else {
             if (el <= 1) {
                 el = 0.5;
+                scrollerDisplay = false;
             } else {
                 el = 1;
+                scrollerDisplay = true;
             }
         }
     };
@@ -201,7 +205,10 @@
     <p id="loading">Loading</p>
 {:else}
     <div class="hei">
-        <div class="scroller" style="transform:scale({el}) ;" />
+        {#if scrollerDisplay}
+            <div class="scroller" />
+        {/if}
+
         {#each print as item, i}
             <span
                 class="pixl"
