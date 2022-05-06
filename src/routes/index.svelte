@@ -80,8 +80,13 @@
     }
 
     let farge = "white";
+    const endre_farge1 = (i) => {
+        if (confirm("Vil du plasere pikselen?")) {
+            endre_farge2(i);
+        }
+    };
 
-    const endre_farge = async (i) => {
+    const endre_farge2 = async (i) => {
         if (dato_boolean) {
             return;
         }
@@ -127,7 +132,7 @@
                     style="background-color: {item.color}; left:{item.x *
                         el}rem; top: {item.y * el +
                         4}rem; transform: scale({el});"
-                    on:click={() => endre_farge(i)}
+                    on:click={() => endre_farge1(i)}
                 />
             {/each}
         </div>
