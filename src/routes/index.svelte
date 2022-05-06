@@ -5,14 +5,8 @@
         collection,
         onSnapshot,
         doc,
-        addDoc,
         updateDoc,
-        deleteDoc,
         setDoc,
-        arrayUnion,
-        arrayRemove,
-        writeBatch,
-        FieldValue,
     } from "firebase/firestore";
     /* import { browser } from "$app/env"; */
 
@@ -35,8 +29,13 @@
 
     const colRef = browser && collection(db, "pixels");
 
+    let array = [];
+    for (let i = 0; i < 150; i++) {
+        for (let j = 0; j < 70; j++) {
+            array.push({ x: i, y: j, color: "" });
+        }
+    }
     let pixels = [];
-
     const unsubscribe =
         browser &&
         onSnapshot(colRef, (querySnapshot) => {
@@ -46,27 +45,19 @@
                 fbTodos = [pixels, ...fbTodos];
             });
             pixels = fbTodos;
+            if (pixels[0] != undefined) {
+                hei = true;
+                morn = pixels[0].pixels;
+                for (let i = 0; i < array.length; i++) {
+                    array[i].color = morn[i];
+                }
+                print = array;
+            }
         });
-
-    let array = [];
-    for (let i = 0; i < 150; i++) {
-        for (let j = 0; j < 70; j++) {
-            array.push({ x: i, y: j, color: "" });
-        }
-    }
 
     let morn = [];
     let hei = false;
     let print = [];
-
-    $: if (pixels[0] != undefined) {
-        hei = true;
-        morn = pixels[0].pixels;
-        for (let i = 0; i < array.length; i++) {
-            array[i].color = morn[i];
-        }
-        print = array;
-    }
 
     function reset() {
         let array_reset = {};
@@ -85,7 +76,7 @@
         });
     };
 
-    let farge = "blue";
+    let farge = "white";
     let c = ["#ddd"];
 
     const fargeendring = (a, i) => {
@@ -97,7 +88,6 @@
     };
 
     const endre_farge = async (i) => {
-        console.log(dato_boolean);
         if (dato_boolean) {
             return;
         }
@@ -106,7 +96,6 @@
         countDownDate = new Date().getTime() + 11000;
 
         localStorage.time = countDownDate;
-
         x = setInterval(function () {
             timer();
         }, 1000);
@@ -135,7 +124,6 @@
             localStorage.time != null
                 ? localStorage.time
                 : (countDownDate = new Date().getTime() - 1);
-        console.log(dato_boolean);
         if (countDownDate == null) {
             clearInterval(x);
             dato_boolean = false;
@@ -144,9 +132,7 @@
         var now = new Date().getTime();
 
         var distance = countDownDate - now;
-        console.log(distance);
         if (distance < 0) {
-            console.log("hei");
             clearInterval(x);
             dato_boolean = false;
             return;
@@ -155,6 +141,53 @@
         /* minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); */
         seconds = Math.floor((distance % (1000 * 60)) / 1000);
     }
+
+    let el = 1;
+    let interval = false;
+
+    const handleWheel = (e) => {
+        if (e.ctrlKey) {
+            console.log(interval + "hi");
+            if (interval) {
+                e.preventDefault();
+                return;
+            }
+            interval = true;
+            console.log(interval);
+            if (e.deltaY * -1 < 0) {
+                zoom(false);
+            } else {
+                zoom(true);
+            }
+            /* scale += e.deltaY * -0.001;
+            // Restrict scale
+            scale = Math.min(Math.max(0.5, scale), 4);
+            el = scale; */
+
+            setTimeout(function () {
+                interval = false;
+            }, 500);
+            e.preventDefault();
+        }
+    };
+
+    const zoom = (zoom) => {
+        if (zoom) {
+            if (el < 1) {
+                el = 1;
+            } else {
+                el = 4;
+            }
+        } else {
+            if (el <= 1) {
+                el = 0.5;
+            } else {
+                el = 1;
+            }
+        }
+    };
+
+    window.addEventListener("mousewheel", handleWheel, { passive: false });
 </script>
 
 <svelte:head
@@ -164,7 +197,7 @@
     /></svelte:head
 >
 
-<svelte:body />
+<diver />
 
 {#if !hei}
     <p id="loading">Loading</p>
@@ -174,22 +207,28 @@
         {#each print as item, i}
             <span
                 class="pixl"
-                style="background-color: {item.color}; left:{item.x}rem; top: {item.y +
-                    4}rem;"
+                style="background-color: {item.color}; left:{item.x *
+                    el}rem; top: {item.y * el + 4}rem; transform: scale({el});"
                 on:click={() => endre_farge(i)}
             />
         {/each}
     </div>
 {/if}
 {#if dato_boolean}
-    <div class="timebar">
-        <p>{minutes}m {seconds}s</p>
+    <div style="width: 300px; margin: auto;">
+        <div class="timebar">
+            <span>{minutes}m {seconds}s</span>
+        </div>
     </div>
 {/if}
 <div class="navbar">
     <!-- <button on:click={addTodo}>Reset</button> -->
     <button
-        style="background-color: {c[0]}; color: blue;"
+        style="background-color: {c[0]}; color: white"
+        on:click={() => fargeendring("white", 5)}>Hvit</button
+    >
+    <button
+        style="background-color: {c[5]}; color: blue;"
         on:click={() => fargeendring("blue", 0)}>Blå</button
     >
     <button
@@ -209,8 +248,35 @@
         on:click={() => fargeendring("yellow", 4)}>Gul</button
     >
 </div>
+<div class="zoom-controls">
+    <div id="zoom-in" on:click={() => zoom(true)}>+</div>
+    <div id="zoom-out" on:click={() => zoom(false)}>-</div>
+</div>
 
 <style>
+    * {
+        box-sizing: border-box;
+    }
+    .zoom-controls {
+        position: fixed;
+        top: 5.5rem;
+        right: 2rem;
+    }
+    .zoom-controls div {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        font-size: 12px;
+    }
+    .zoom-controls div:hover {
+        cursor: pointer;
+        background-color: black;
+    }
+
+    .zoom-controls div:not(:first-child) {
+        margin-top: 5px;
+    }
     :global(body) {
         margin: 0;
         padding: 0;
@@ -245,22 +311,25 @@
     .timebar {
         overflow: hidden;
         position: fixed;
-        top: 0;
-        width: 100%;
-        height: 10rem;
-        text-align: center;
-        display: flex;
+        background-color: rgba(51, 51, 51, 0.9);
+        left: (50% - 6rem);
+        top: 4.125rem;
+        width: 12rem;
+        height: 3.5rem;
         justify-content: center;
+        display: flex;
+        margin: auto;
     }
-    .timebar p {
+    .timebar span {
         color: red;
         font-size: 3rem;
         float: left;
         display: block;
         border: none;
         text-align: center;
-        padding: 0.875rem 1rem;
         text-decoration: none;
+        position: absolute;
+        top: -0.625rem;
     }
     .navbar {
         overflow: hidden;
