@@ -81,7 +81,7 @@
 
     const fargeendring = (a, i) => {
         farge = a;
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < c.length; i++) {
             c[i] = null;
         }
         c[i] = "#ddd";
@@ -197,8 +197,6 @@
     /></svelte:head
 >
 
-<diver />
-
 {#if !hei}
     <p id="loading">Loading</p>
 {:else}
@@ -225,11 +223,11 @@
     <!-- <button on:click={addTodo}>Reset</button> -->
     <button
         style="background-color: {c[0]}; color: white"
-        on:click={() => fargeendring("white", 5)}>Hvit</button
+        on:click={() => fargeendring("white", 0)}>Hvit</button
     >
     <button
         style="background-color: {c[5]}; color: blue;"
-        on:click={() => fargeendring("blue", 0)}>Blå</button
+        on:click={() => fargeendring("blue", 5)}>Blå</button
     >
     <button
         style="background-color: {c[1]}; color: red"
@@ -259,6 +257,9 @@
     }
     .zoom-controls {
         position: fixed;
+        padding: 2px;
+        border-radius: 5px;
+        background-color: rgba(256, 256, 256, 0.9);
         top: 5.5rem;
         right: 2rem;
     }
