@@ -8,9 +8,21 @@
         }
         c[i] = "#ddd";
     };
+    let media = 1;
+    function myFunction(x) {
+        if (x.matches) {
+            media = 0.6;
+        } else {
+            media = 1;
+        }
+    }
+
+    var mornsa = window.matchMedia("(max-width: 700px)");
+    myFunction(mornsa);
+    mornsa.addListener(myFunction);
 </script>
 
-<div class="navbar">
+<div class="navbar" style="--media: {media}">
     <button
         style="background-color: {c[0]}; color: white"
         on:click={() => fargeendring("white", 0)}>Hvit</button
@@ -38,11 +50,6 @@
 </div>
 
 <style>
-    @media only screen and (max-width: 500px) {
-        button {
-            font-size: 1rem;
-        }
-    }
     .navbar {
         overflow: hidden;
         white-space: nowrap;
@@ -53,7 +60,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 4rem;
+        height: calc(4rem * var(--media));
     }
     button {
         position: relative;
@@ -63,8 +70,9 @@
         margin: none;
         text-align: center;
         height: 100%;
+        width: auto;
         text-decoration: none;
-        font-size: 2rem;
+        font-size: calc(2rem * var(--media));
     }
     button:hover {
         background: #ddd;
