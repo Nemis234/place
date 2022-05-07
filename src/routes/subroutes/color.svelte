@@ -11,7 +11,7 @@
     let media = 1;
     function myFunction(x) {
         if (x.matches) {
-            media = 0.6;
+            media = 0.7;
         } else {
             media = 1;
         }
