@@ -109,15 +109,21 @@
     //Zooming with mousewheel etc.
     let el = 1;
     let scrollerDisplay = true;
+    let border = "none";
+
+    $: if (el > 1) {
+        border = "1px solid #ddd";
+    } else {
+        border = "none";
+    }
 </script>
 
 <svelte:head
     ><meta
         name="viewport"
-        content="width=device-width, initial-scale=0.8, maximum-scale=3.0,  minimum-scale=0.8"
+        content="width=device-width, initial-scale=0.7, maximum-scale=3.0,  minimum-scale=0.7, user-scalable=0"
     /></svelte:head
 >
-
 {#if !hei}
     <p id="loading">Loading</p>
 {:else}
@@ -125,13 +131,12 @@
         {#if scrollerDisplay}
             <div class="scroller" />
         {/if}
-        <div class="canvas">
+        <div class="canvas" style="--el: {el}; --border: {border}">
             {#each print as item, i}
                 <span
                     class="pixl"
                     style="background-color: {item.color}; left:{item.x *
-                        el}rem; top: {item.y * el +
-                        4}rem; transform: scale({el});"
+                        el}rem; top: {item.y * el + 4}rem;;"
                     on:click={() => endre_farge1(i)}
                 />
             {/each}
@@ -156,7 +161,6 @@
     * {
         box-sizing: border-box;
     }
-
     :global(body) {
         margin: 0;
         padding: 0;
@@ -181,9 +185,11 @@
         height: 1rem;
         margin: none;
         border-collapse: separate;
+        border: var(--border);
         background-color: none;
         position: absolute;
         box-sizing: border-box;
+        transform: scale(var(--el));
     }
     .pixl:hover {
         border: 1px solid black;

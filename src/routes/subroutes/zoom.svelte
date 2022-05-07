@@ -6,13 +6,11 @@
 
     const handleWheel = (e) => {
         if (e.ctrlKey) {
-            console.log(interval + "hi");
             if (interval) {
                 e.preventDefault();
                 return;
             }
             interval = true;
-            console.log(interval);
             if (e.deltaY * -1 < 0) {
                 zoom(false);
             } else {

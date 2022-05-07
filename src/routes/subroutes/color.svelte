@@ -38,6 +38,11 @@
 </div>
 
 <style>
+    @media only screen and (max-width: 500px) {
+        button {
+            font-size: 1rem;
+        }
+    }
     .navbar {
         overflow: hidden;
         white-space: nowrap;
