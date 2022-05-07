@@ -60,7 +60,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: calc(4rem * var(--media));
+        height: 4rem;
     }
     button {
         position: relative;
