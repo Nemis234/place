@@ -2,26 +2,32 @@
     export let scrollerDisplay;
     export let el;
 
-    let interval = false;
+    let canRun = false;
+    let timer;
 
     const handleWheel = (e) => {
-        if (e.ctrlKey) {
-            if (interval) {
-                e.preventDefault();
-                return;
-            }
-            interval = true;
-            if (e.deltaY * -1 < 0) {
-                zoom(false);
-            } else {
-                zoom(true);
-            }
-            setTimeout(function () {
-                interval = false;
-            }, 500);
-            e.preventDefault();
+        if (!e.ctrlKey) {
+            return;
+        }
+        e.preventDefault();
+        if (canRun) {
+            console.log("hei");
+            return;
+        }
+        canRun = true;
+        timer = setTimeout(timeout, 300);
+        if (e.deltaY > 0) {
+            zoom(false);
+        } else if (e.deltaY < 0) {
+            zoom(true);
         }
     };
+
+    function timeout() {
+        console.log("morn");
+        canRun = false;
+        clearTimeout(timer);
+    }
 
     const zoom = (zoom) => {
         if (zoom) {
@@ -44,28 +50,44 @@
     };
 
     window.addEventListener("mousewheel", handleWheel, { passive: false });
+
+    let media = 1;
+    function myFunction(x) {
+        if (x.matches) {
+            media = 1.5;
+        } else {
+            media = 1;
+        }
+    }
+
+    var mornsa = window.matchMedia("(max-width: 700px)");
+    myFunction(mornsa);
+    mornsa.addListener(myFunction);
 </script>
 
-<div class="zoom-controls">
+<div class="zoom-controls" style="--media: {media}">
     <div id="zoom-in" on:click={() => zoom(true)}>+</div>
     <div id="zoom-out" on:click={() => zoom(false)}>-</div>
+    <span>{100 * el}%</span>
 </div>
 
 <style>
     .zoom-controls {
         position: fixed;
-        padding: 2px;
+        padding: calc(3px * var(--media));
         border-radius: 5px;
         background-color: rgba(256, 256, 256, 0.9);
         top: 5.5rem;
         right: 2rem;
     }
     .zoom-controls div {
+        text-align: center;
         background-color: rgba(0, 0, 0, 0.7);
-        padding: 10px;
+        width: auto;
+        padding: calc(15px);
         border-radius: 5px;
         color: white;
-        font-size: 12px;
+        font-size: calc(1rem * 2 * var(--media));
     }
     .zoom-controls div:hover {
         cursor: pointer;

@@ -47,6 +47,10 @@
         style="background-color: {c[4]}; color: yellow"
         on:click={() => fargeendring("yellow", 4)}>Gul</button
     >
+    <button
+        style="background-color: {c[6]}; color: black"
+        on:click={() => fargeendring("black", 6)}>Svart</button
+    >
 </div>
 
 <style>
