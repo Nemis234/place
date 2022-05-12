@@ -151,8 +151,6 @@
     </div>
 {/if}
 
-<!-- <Reset {setDoc} /> -->
-
 <Color bind:farge />
 
 <Zoom bind:el bind:scrollerDisplay />
@@ -198,7 +196,7 @@
         overflow: hidden;
         position: fixed;
         background-color: rgba(51, 51, 51, 0.9);
-        left: (50% - 6rem);
+        left: calc(50% - 6rem);
         top: 4.125rem;
         width: 12rem;
         height: 3.5rem;

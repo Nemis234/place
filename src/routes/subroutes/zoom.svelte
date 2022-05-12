@@ -15,7 +15,7 @@
             return;
         }
         canRun = true;
-        timer = setTimeout(timeout, 300);
+        timer = setTimeout(timeout, 400);
         if (e.deltaY > 0) {
             zoom(false);
         } else if (e.deltaY < 0) {

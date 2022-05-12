@@ -1,5 +1,6 @@
 <script>
     export let farge;
+
     let c = ["#ddd"];
     const fargeendring = (a, i) => {
         farge = a;
@@ -28,10 +29,6 @@
         on:click={() => fargeendring("white", 0)}>Hvit</button
     >
     <button
-        style="background-color: {c[5]}; color: blue;"
-        on:click={() => fargeendring("blue", 5)}>Blå</button
-    >
-    <button
         style="background-color: {c[1]}; color: red"
         on:click={() => fargeendring("red", 1)}>Rød</button
     >
@@ -46,6 +43,10 @@
     <button
         style="background-color: {c[4]}; color: yellow"
         on:click={() => fargeendring("yellow", 4)}>Gul</button
+    >
+    <button
+        style="background-color: {c[5]}; color: blue;"
+        on:click={() => fargeendring("blue", 5)}>Blå</button
     >
     <button
         style="background-color: {c[6]}; color: black"
