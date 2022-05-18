@@ -1,4 +1,6 @@
 <script>
+    import Reset from "../firebase/reset.svelte";
+
     export let farge;
 
     let c = ["#ddd"];
@@ -52,6 +54,7 @@
         style="background-color: {c[6]}; color: black"
         on:click={() => fargeendring("black", 6)}>Svart</button
     >
+    <!-- <Reset {media} /> -->
 </div>
 
 <style>

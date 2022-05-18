@@ -1,17 +1,10 @@
 <script>
     import Color from "./subroutes/color.svelte";
     import Zoom from "./subroutes/zoom.svelte";
-    import Reset from "./firebase/reset.svelte";
+    import Canvas from "./subroutes/canvas.svelte";
     import { firebaseConfig } from "./firebase/firebaseconfig";
     import { initializeApp, getApps, getApp } from "firebase/app";
-    import {
-        getFirestore,
-        collection,
-        onSnapshot,
-        doc,
-        updateDoc,
-        setDoc,
-    } from "firebase/firestore";
+    import { getFirestore, collection, onSnapshot } from "firebase/firestore";
 
     const firebaseApp =
         getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
@@ -47,24 +40,32 @@
         }
     });
 
-    var seconds;
-    var minutes = 0;
+    let seconds = 0;
+    let minutes = 0;
     let dato_boolean = false;
+    let countDownDate = localStorage.time != "" ? localStorage.time : "";
+    //If there is a time-limit allready
     let x = setInterval(function () {
         timer();
     }, 1000);
-    let countDownDate =
-        localStorage.time != ""
-            ? localStorage.time
-            : (countDownDate = new Date().getTime());
+
+    //When canvas.svelte changes a color, seconds is set to 10 and this will execute
+    let time = localStorage.time;
+
+    $: if (seconds === 10 || time != localStorage.time) {
+        time = localStorage.time;
+        dato_boolean = true;
+        x = setInterval(function () {
+            timer();
+        }, 1000);
+    }
 
     function timer() {
-        dato_boolean = true;
         countDownDate =
             localStorage.time != null
                 ? localStorage.time
                 : (countDownDate = new Date().getTime() - 1);
-        if (countDownDate == null) {
+        if (!countDownDate) {
             clearInterval(x);
             dato_boolean = false;
             return;
@@ -80,31 +81,6 @@
     }
 
     let farge = "white";
-    const endre_farge1 = (i) => {
-        if (confirm("Vil du plasere pikselen?")) {
-            endre_farge2(i);
-        }
-    };
-
-    const endre_farge2 = async (i) => {
-        if (dato_boolean) {
-            return;
-        }
-        dato_boolean = true;
-        morn[i] = farge;
-
-        countDownDate = new Date().getTime() + 11000;
-        localStorage.time = countDownDate;
-        minutes = 0;
-        seconds = 10;
-        x = setInterval(function () {
-            timer();
-        }, 1000);
-
-        await updateDoc(doc(db, "pixels", "pixel"), {
-            ["pixels." + i]: farge,
-        });
-    };
 
     //Zooming with mousewheel etc.
     let el = 1;
@@ -125,22 +101,22 @@
     /></svelte:head
 >
 {#if !hei}
-    <p id="loading">Loading</p>
+    <p id="loading">Loading...</p>
 {:else}
     <div class="hei">
         {#if scrollerDisplay}
             <div class="scroller" />
         {/if}
-        <div class="canvas" style="--el: {el}; --border: {border}">
-            {#each print as item, i}
-                <span
-                    class="pixl"
-                    style="background-color: {item.color}; left:{item.x *
-                        el}rem; top: {item.y * el + 4}rem;;"
-                    on:click={() => endre_farge1(i)}
-                />
-            {/each}
-        </div>
+        <Canvas
+            {print}
+            {el}
+            {border}
+            {farge}
+            {dato_boolean}
+            bind:morn
+            bind:countDownDate
+            bind:seconds
+        />
     </div>
 {/if}
 {#if dato_boolean}
@@ -167,6 +143,7 @@
     #loading {
         position: absolute;
         top: 4rem;
+        font-size: 3rem;
     }
     .scroller {
         height: 75rem;
@@ -178,20 +155,7 @@
         top: 1rem;
         left: 1rem;
     }
-    .pixl {
-        width: 1rem;
-        height: 1rem;
-        margin: none;
-        border-collapse: separate;
-        border: var(--border);
-        background-color: none;
-        position: absolute;
-        box-sizing: border-box;
-        transform: scale(var(--el));
-    }
-    .pixl:hover {
-        border: 1px solid black;
-    }
+
     .timebar {
         overflow: hidden;
         position: fixed;
