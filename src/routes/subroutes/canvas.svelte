@@ -3,16 +3,16 @@
 
     import { getFirestore, doc, updateDoc } from "firebase/firestore";
     const db = getFirestore();
-    export let print,
-        el,
-        border,
-        farge,
-        dato_boolean,
-        morn,
-        countDownDate,
-        seconds;
+    export let print, el, border, farge, morn, seconds, minutes, antallSekunder;
 
     const endre_farge1 = (i) => {
+        if (seconds != 0) {
+            swal({
+                title: `Du må vente i ${seconds} sekunder`,
+                icon: "error",
+            });
+            return;
+        }
         swal({
             title: "Vil du plasere pikselen?",
             icon: "warning",
@@ -26,19 +26,13 @@
     };
 
     const endre_farge2 = async (i) => {
-        if (dato_boolean) {
-            swal({
-                title: `Du må vente i ${seconds} sekunder`,
-            });
-            return;
-        }
         morn[i] = farge;
 
-        seconds = 10;
+        seconds = Math.floor((antallSekunder % (1000 * 60)) / 1000);
+        minutes = Math.floor((antallSekunder % (1000 * 60 * 60)) / (1000 * 60));
 
-        countDownDate = new Date().getTime() + 11000;
-        localStorage.time = countDownDate;
-
+        localStorage.time =
+            new Date().getTime() + (antallSekunder * 1000 + 1000);
         await updateDoc(doc(db, "pixels", "pixel"), {
             ["pixels." + i]: farge,
         });

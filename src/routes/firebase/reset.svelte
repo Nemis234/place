@@ -4,10 +4,17 @@
 
     export let media;
 
+    let array = [];
+    for (let i = 0; i < 200; i++) {
+        for (let j = 0; j < 99; j++) {
+            array.push({ x: i, y: j, color: "#ffffff" });
+        }
+    }
+
     function reset() {
         let array_reset = {};
         for (let i = 0; i < array.length; i++) {
-            let hi = { [i]: "#fffff" };
+            let hi = { [i]: "#ffffff" };
             Object.assign(array_reset, hi);
         }
         return array_reset;
@@ -15,7 +22,7 @@
 
     const resetCanvas = async () => {
         let array_reset = reset();
-        await setDoc(doc(db, "pixels", "morn"), {
+        await setDoc(doc(db, "pixels", "pixel"), {
             pixels: array_reset,
         });
     };

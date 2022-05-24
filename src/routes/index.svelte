@@ -1,7 +1,8 @@
 <script>
+    import Canvas from "./subroutes/canvas.svelte";
     import Color from "./subroutes/color.svelte";
     import Zoom from "./subroutes/zoom.svelte";
-    import Canvas from "./subroutes/canvas.svelte";
+
     import { firebaseConfig } from "./firebase/firebaseconfig";
     import { initializeApp, getApps, getApp } from "firebase/app";
     import { getFirestore, collection, onSnapshot } from "firebase/firestore";
@@ -14,11 +15,12 @@
     const colRef = collection(db, "pixels");
 
     let array = [];
-    for (let i = 0; i < 150; i++) {
-        for (let j = 0; j < 70; j++) {
-            array.push({ x: i, y: j, color: "" });
+    for (let i = 0; i < 200; i++) {
+        for (let j = 0; j < 100; j++) {
+            array.push({ x: i, y: j, color: "#ffffff" });
         }
     }
+
     let morn = [];
     let print = [];
     let hei = false;
@@ -43,17 +45,15 @@
     let seconds = 0;
     let minutes = 0;
     let dato_boolean = false;
-    let countDownDate = localStorage.time != "" ? localStorage.time : "";
     //If there is a time-limit allready
     let x = setInterval(function () {
+        dato_boolean = true;
         timer();
     }, 1000);
 
-    //When canvas.svelte changes a color, seconds is set to 10 and this will execute
-    let time = localStorage.time;
-
-    $: if (seconds === 10 || time != localStorage.time) {
-        time = localStorage.time;
+    const antallSekunder = 60;
+    //When canvas.svelte changes a color, seconds is set to  AntallSekunder   and this will execut
+    $: if (seconds === antallSekunder) {
         dato_boolean = true;
         x = setInterval(function () {
             timer();
@@ -61,23 +61,20 @@
     }
 
     function timer() {
-        countDownDate =
-            localStorage.time != null
-                ? localStorage.time
-                : (countDownDate = new Date().getTime() - 1);
-        if (!countDownDate) {
+        if (!localStorage.time) {
             clearInterval(x);
             dato_boolean = false;
             return;
         }
         const now = new Date().getTime();
-        const distance = countDownDate - now;
+        const distance = localStorage.time - now;
         if (distance < 0) {
             clearInterval(x);
             dato_boolean = false;
             return;
         }
         seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     }
 
     let farge = "white";
@@ -112,10 +109,10 @@
             {el}
             {border}
             {farge}
-            {dato_boolean}
+            {antallSekunder}
             bind:morn
-            bind:countDownDate
             bind:seconds
+            bind:minutes
         />
     </div>
 {/if}
