@@ -5,3 +5,4 @@
 
 .vercel
 src/routes/firebase/reset.svelte
+src/routes/firebase/reset.svelte
