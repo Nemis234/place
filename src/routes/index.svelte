@@ -45,6 +45,7 @@
     let seconds = 0;
     let minutes = 0;
     let dato_boolean = false;
+
     //If there is a time-limit allready
     let x = setInterval(function () {
         dato_boolean = true;
