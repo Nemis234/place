@@ -3,7 +3,7 @@
 
     import { getFirestore, doc, updateDoc } from "firebase/firestore";
     const db = getFirestore();
-    export let print, el, border, farge, morn, seconds, minutes, antallSekunder;
+    export let print, el, border, farge, morn, seconds, antallSekunder;
 
     const endre_farge1 = (i) => {
         if (seconds != 0) {
@@ -17,9 +17,8 @@
             title: "Vil du plasere pikselen?",
             icon: "warning",
             buttons: ["Nei", "Ja"],
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
+        }).then((result) => {
+            if (result) {
                 endre_farge2(i);
             }
         });
@@ -28,8 +27,7 @@
     const endre_farge2 = async (i) => {
         morn[i] = farge;
 
-        seconds = Math.floor((antallSekunder % (1000 * 60)) / 1000);
-        minutes = Math.floor((antallSekunder % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = antallSekunder;
 
         localStorage.time =
             new Date().getTime() + (antallSekunder * 1000 + 1000);

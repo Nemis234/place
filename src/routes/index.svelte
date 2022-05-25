@@ -52,7 +52,7 @@
         timer();
     }, 1000);
 
-    const antallSekunder = 60;
+    const antallSekunder = 10;
     //When canvas.svelte changes a color, seconds is set to  AntallSekunder   and this will execut
     $: if (seconds === antallSekunder) {
         dato_boolean = true;
