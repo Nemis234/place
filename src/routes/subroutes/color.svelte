@@ -1,5 +1,5 @@
 <script>
-    import Reset from "../firebase/reset.svelte";
+    /*     import Reset from "../firebase/reset.svelte"; */
 
     export let farge;
 
